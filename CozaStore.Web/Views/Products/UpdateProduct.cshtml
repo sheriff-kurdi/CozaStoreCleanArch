@@ -1,4 +1,4 @@
-﻿@model CozaStore.Core.Entities.Product
+﻿@model CozaStore.Core.ViewModels.CreateProductVM
 
 @{
     ViewData["Title"] = "UpdateProduct";
@@ -37,6 +37,12 @@
                     <option value=""> Please Sellect Category </option>
                 </select>
                 <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PhotoBinary" class="control-label"></label>
+                <input asp-for="PhotoBinary" type="file" class="form-control-file" id="exampleFormControlFile1" />
+                <span asp-validation-for="PhotoBinary" class="text-danger"></span>
             </div>
 
             <div class="form-group">

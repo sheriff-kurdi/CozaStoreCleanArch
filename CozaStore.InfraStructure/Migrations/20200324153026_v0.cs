@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CozaStore.InfraStructure.Migrations
 {
-    public partial class init : Migration
+    public partial class v0 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -52,13 +52,13 @@ namespace CozaStore.InfraStructure.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemName = table.Column<string>(nullable: true),
+                    ItemName = table.Column<string>(nullable: false),
                     ItemNumbers = table.Column<int>(nullable: false),
                     Size = table.Column<int>(nullable: false),
                     TotallCost = table.Column<int>(nullable: false),
                     Phone = table.Column<int>(nullable: false),
-                    CustomerName = table.Column<string>(nullable: true),
-                    Image = table.Column<string>(nullable: true)
+                    CustomerName = table.Column<string>(nullable: false),
+                    Image = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,7 +71,7 @@ namespace CozaStore.InfraStructure.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Price = table.Column<int>(nullable: false),
                     Image = table.Column<string>(nullable: true),
                     Category = table.Column<int>(nullable: false),

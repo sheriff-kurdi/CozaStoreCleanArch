@@ -3,39 +3,38 @@ using CozaStore.Core.Enums;
 using CozaStore.Core.IRepo;
 using CozaStore.Core.ViewModels;
 using CozaStore.InfraStructure.Data;
+using CozaStore.Services.Util;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 namespace CozaStore.InfraStructure.DataAcess
 {
 
     public class SqlProductRepo : IProductRepo
     {
         private readonly ApplicationDbContext db;
-        //private readonly IWebHostEnvironment hostingEnvironment;
+        private readonly IWebHostEnvironment hostingEnvironment;
 
-        public SqlProductRepo(ApplicationDbContext db/*, IWebHostEnvironment hostingEnvironment*/)
+        public SqlProductRepo(ApplicationDbContext db, IWebHostEnvironment hostingEnvironment)
         {
             this.db = db;
-            //this.hostingEnvironment = hostingEnvironment;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         public void AddProduct(CreateProductVM model)
         {
-            //string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "Uploads");
-            //string uniqFileName = Guid.NewGuid().ToString() + "_" + model.photo.FileName;
+            
 
-            //string filePath = Path.Combine(uploadsFolder, uniqFileName);
-
-            //model.photo.CopyTo(new FileStream(filePath, FileMode.Create));
+            string imagePath = ImageHandeler.UploadImage(model.PhotoBinary, hostingEnvironment.WebRootPath);
 
             Product pro = new Product
             {
                 Name = model.Name,
                 Price = model.Price,
-                //Image = uniqFileName,
+                Image = imagePath,
                 Type = model.Type,
                 Category = model.Category
 
@@ -50,6 +49,8 @@ namespace CozaStore.InfraStructure.DataAcess
         {
             if (pro != null)
             {
+                ImageHandeler.DeleteImage(pro.Image, hostingEnvironment.WebRootPath);
+
                 db.Remove(pro);
                 db.SaveChanges();
             }
@@ -69,14 +70,21 @@ namespace CozaStore.InfraStructure.DataAcess
         }
 
 
-        public void Update(Product proToUpdate)
+        public void Update(CreateProductVM updatedPro)
         {
-            Product pro = db.Products.Find(proToUpdate.Id);
+            Product OldProduct = db.Products.Find(updatedPro.Id);
+            //delete old image.
 
-            pro.Name = proToUpdate.Name;
-            pro.Price = proToUpdate.Price;
-            pro.Category = proToUpdate.Category;
-            pro.Type = proToUpdate.Type;
+            if (updatedPro.PhotoBinary != null)
+            {
+                bool output = ImageHandeler.DeleteImage(OldProduct.Image, hostingEnvironment.WebRootPath);
+                OldProduct.Image = ImageHandeler.UploadImage(updatedPro.PhotoBinary, hostingEnvironment.WebRootPath);
+            }
+
+            OldProduct.Name = updatedPro.Name;
+            OldProduct.Price = updatedPro.Price;
+            OldProduct.Category = updatedPro.Category;
+            OldProduct.Type = updatedPro.Type;
             db.SaveChanges();
         }
 

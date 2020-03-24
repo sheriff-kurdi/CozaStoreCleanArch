@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CozaStore.Core.Entities;
 using CozaStore.Core.IRepo;
 using CozaStore.Core.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CozaStore.Web.Controllers
@@ -13,10 +14,12 @@ namespace CozaStore.Web.Controllers
     {
 
         private readonly IProductRepo productRepo;
+        private readonly IWebHostEnvironment hostingEnvironment;
 
-        public ProductsController(IProductRepo productRepo)
+        public ProductsController(IProductRepo productRepo, IWebHostEnvironment hostingEnvironment)
         {
             this.productRepo = productRepo;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         public IActionResult Index()
@@ -47,7 +50,6 @@ namespace CozaStore.Web.Controllers
         public IActionResult Delete(Product pro)
         {
 
-
             productRepo.Delete(pro);
             return RedirectToAction("ManageProducts");
         }
@@ -66,7 +68,7 @@ namespace CozaStore.Web.Controllers
         {
             //string uniqFileName = null;
 
-            if (model.photo != null)
+            if (model.PhotoBinary != null)
             {
                 productRepo.AddProduct(model);
                 return RedirectToAction("AddProduct");
@@ -83,11 +85,21 @@ namespace CozaStore.Web.Controllers
         public IActionResult UpdateProduct(int id)
         {
             Product pro = productRepo.GetProductByID(id);
-            return View(pro);
+            CreateProductVM proVM = new CreateProductVM
+            {
+                Id = pro.Id,
+                Image = pro.Image,
+                Category = pro.Category,
+                Name = pro.Name,
+                Price = pro.Price,
+                Size = pro.Size,
+                Type = pro.Type
+            };
+            return View(proVM);
         }
 
         [HttpPost]
-        public IActionResult UpdateProduct(Product UpdatedPro)
+        public IActionResult UpdateProduct(CreateProductVM UpdatedPro)
         {
             productRepo.Update(UpdatedPro);
             return RedirectToAction("ManageProducts", "products");

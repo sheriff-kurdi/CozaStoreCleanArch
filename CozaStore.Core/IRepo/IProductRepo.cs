@@ -12,7 +12,7 @@ namespace CozaStore.Core.IRepo
         Product GetProductByID(int id);
         IEnumerable<Product> GetAllProducts();
         void Delete(Product pro);
-        void Update(Product proToUpdate);
+        void Update(CreateProductVM updatedPro);
         IEnumerable<Product> GetWomenProducts();
         IEnumerable<Product> GetMenProducts();
         IEnumerable<Product> GetMenBags();
