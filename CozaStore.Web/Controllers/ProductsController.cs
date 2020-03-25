@@ -49,8 +49,8 @@ namespace CozaStore.Web.Controllers
         [HttpPost]
         public IActionResult Delete(Product pro)
         {
-
-            productRepo.Delete(pro);
+            Product proToDelete = productRepo.GetProductByID(pro.Id);
+            productRepo.Delete(proToDelete);
             return RedirectToAction("ManageProducts");
         }
         // end Delete
@@ -63,7 +63,7 @@ namespace CozaStore.Web.Controllers
             return View("AddProduct");
         }
 
-        [HttpPost]
+        [HttpPost] 
         public IActionResult AddProduct(CreateProductVM model)
         {
             //string uniqFileName = null;

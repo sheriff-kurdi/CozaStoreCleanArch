@@ -14,7 +14,6 @@ namespace CozaStore.Core.ViewModels
         //public string Name { get; set; }
         //[Required]
         //public int Price { get; set; }
-        [Required]
         public IFormFile PhotoBinary { get; set; }
     }
 }
